@@ -3,6 +3,7 @@
 import { initializeApp } from "firebase/app";
 // *** ESTA LÍNEA ES CRUCIAL: Necesitas getFirestore para Firestore ***
 import { getFirestore } from "firebase/firestore"; // <-- Asegúrate de que esta línea esté presente
+import { getAuth, setPersistence, browserSessionPersistence } from "firebase/auth";
 
 // Si usas Analytics, también lo importas aquí, pero no es esencial para Firestore
 // import { getAnalytics } from "firebase/analytics"; 
@@ -25,6 +26,15 @@ const app = initializeApp(firebaseConfig);
 // Inicializa Firestore y EXPORTA la instancia 'db'
 // *** ESTA LÍNEA ES LA CLAVE PARA EL ERROR QUE RECIBES ***
 export const db = getFirestore(app); // <-- Asegúrate de que 'export' esté aquí
+export const auth = getAuth(app);
+setPersistence(auth, browserSessionPersistence)
+  .then(() => {
+    console.log("Persistencia de sesión configurada a nivel de navegador (cierra sesión al cerrar la pestaña/navegador).");
+  })
+  .catch((error) => {
+    // Manejo de errores si la configuración de persistencia falla
+    console.error("Error al configurar la persistencia:", error.code, error.message);
+  });
 
 // Si usas Analytics, lo inicializas aquí
 // const analytics = getAnalytics(app);
